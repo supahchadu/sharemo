@@ -1,9 +1,16 @@
 import AccountProfile from "@/components/forms/AccountProfile";
+import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 async function Page() {
     const user = await currentUser();
-    const userInfo = {};
+
+    if (!user) return redirect("/sign-in"); // to avoid typescript warnings
+
+    const userInfo = await fetchUser(user.id);
+    if (userInfo?.onboarded) redirect("/");
+
     const userData = {
         id: user?.id,
         objectId: userInfo?.id,
