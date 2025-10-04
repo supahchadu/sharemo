@@ -19,6 +19,7 @@ import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
 import { ShareValidation } from "@/lib/validations/share";
 import { createShare } from "@/lib/actions/share.actions";
+import { useOrganization } from "@clerk/nextjs";
 
 interface Props {
     userId: string,
@@ -28,6 +29,7 @@ function PostShare({ userId } : Props)
 {
     const router = useRouter();
     const pathname = usePathname();
+    const { organization } = useOrganization();
 
     const form = useForm<z.infer<typeof ShareValidation>>({
         resolver: zodResolver(ShareValidation),
@@ -38,10 +40,11 @@ function PostShare({ userId } : Props)
     });
 
     const onSubmit = async (values : z.infer<typeof ShareValidation>) => {
+
         await createShare({
             text: values.share,
             author: userId,
-            clusterId: null,
+            clusterId: organization ? organization.id : null,
             path: pathname
         });
 

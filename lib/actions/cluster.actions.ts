@@ -37,7 +37,7 @@ export async function createCommunity(
     const createdCommunity = await newCommunity.save();
 
     // Update User model
-    user.communities.push(createdCommunity._id);
+    user.clusters.push(createdCommunity._id);
     await user.save();
 
     return createdCommunity;
@@ -74,7 +74,7 @@ export async function fetchCommunityPosts(id: string) {
     connectToDB();
 
     const communityPosts = await Cluster.findById(id).populate({
-      path: "share",
+      path: "shares",
       model: Share,
       populate: [
         {

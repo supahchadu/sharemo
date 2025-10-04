@@ -33,6 +33,7 @@ const Page = async ({ params } ) => {
                 content={share.text}
                 author={share.author}
                 cluster={share.cluster}
+                likes={share.likes}
                 createdAt={share.createdAt}
                 comments={share.children}
             />
@@ -55,6 +56,7 @@ const Page = async ({ params } ) => {
                     author={childItem.author}
                     cluster={childItem.cluster}
                     createdAt={childItem.createdAt}
+                    likes={childItem.likes}
                     comments={childItem.children}
                     isComment
                     />

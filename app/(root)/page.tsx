@@ -24,6 +24,7 @@ export default async function Home() {
                 content={post.text}
                 author={post.author}
                 cluster={post.cluster}
+                likes={post.likes}
                 createdAt={post.createdAt}
                 comments={post.children}
                 />

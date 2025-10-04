@@ -21,7 +21,7 @@ export const sidebarLinks = [
   },
   {
     imgURL: "/community.svg",
-    route: "/clusters",
+    route: "/cluster",
     label: "Clusters",
   },
   {
@@ -37,7 +37,7 @@ export const profileTabs = [
   { value: "tagged", label: "Tagged", icon: "/tag.svg" },
 ];
 
-export const communityTabs = [
+export const clusterTabs = [
   { value: "shares", label: "Shares", icon: "/reply.svg" },
   { value: "members", label: "Members", icon: "/members.svg" },
   { value: "requests", label: "Requests", icon: "/request.svg" },
