@@ -1,5 +1,8 @@
-import { addLikeToShare } from "@/lib/actions/share.actions";
+
+import { fetchUser } from "@/lib/actions/user.actions";
 import { formatDateString } from "@/lib/utils";
+import { useAuth, useUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -20,7 +23,9 @@ interface Props {
     } | null;
     createdAt: string;
     likes: {
-        id: string;
+        author:{
+            id: string;
+        }
     }[];
     comments: {
         author: {
@@ -29,9 +34,10 @@ interface Props {
     }[];
 
     isComment?: boolean;
+    isLiked?: boolean;
 }
 
-const ShareCard = ({
+const ShareCard = async ({
     id,
     currentUserId,
     parentId,
@@ -42,8 +48,20 @@ const ShareCard = ({
     comments,
     likes,
     isComment,
+    isLiked,
 } : Props) =>
 {
+    const loopLikes = () => {
+        likes.map((likeUsers) => {
+            console.log(`${JSON.stringify(likeUsers).slice(3,-3)} === ${currentUserId}`)
+            if(JSON.stringify(likeUsers).slice(3,-3) === currentUserId)
+            {
+                isLiked=true;
+            }
+        })
+    }
+
+    loopLikes();
 
     return(
         <article className={`flex w-full flex-col rounded-xl
@@ -74,11 +92,24 @@ const ShareCard = ({
 
                         <div className="mt-5 flex flex-col gap-3">
                             <div className="flex gap-3.5">
-                                <Link href={`/like/${id}`}>
+
+                                { isLiked && !isComment && (
+                                
+                                <Image src="/heart-filled.svg" alt="heart" width={24}
+                                    height={24} className="object-contain" />
+                                
+                                )}
+                                { !isLiked && !isComment && 
+                                (
+                                    <Link href={`/like/${id}`}>
                                 <Image src="/heart-gray.svg" alt="heart" width={24}
                                     height={24} className="cursor-pointer object-contain" />
                                 </Link>
-                                 <p className="text-light-1 text-subtle-medium">{likes.length}</p>
+                                )}
+                                {!isComment && (
+                                <p className="text-light-1 text-right text-ellipsis text-small-medium">{likes.length}</p>
+                                )}
+                                 
                                 <Link href={`/share/${id}`}>
                                     <Image src="/reply.svg" alt="heart" width={24}
                                         height={24} className="cursor-pointer object-contain" />

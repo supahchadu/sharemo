@@ -162,3 +162,34 @@ export async function getActivity(userId: string){
     throw error;
   }
 }
+
+export async function getActivityLikes(userId: string){
+    try {
+    connectToDB();
+
+    // Find all threads created by the user
+    const userThreads = await Share.find({ author: userId });
+    console.log(userThreads);
+
+    // Collect all the child thread ids (replies) from the 'children' field of each user thread
+    const childThreadIds = userThreads.reduce((acc, userThread) => {
+      return acc.concat(userThread.likes);
+    }, []);
+
+    
+    // Find and return the child threads (replies) excluding the ones created by the same user
+    const replies = await Share.find({
+      id: { $in: childThreadIds },
+      author: { $ne: userId }, // Exclude threads authored by the same user
+    }).populate({
+      path: "author",
+      model: User,
+      select: "name image _id",
+    });
+
+    return replies;
+  } catch (error) {
+    console.error("Error fetching likes: ", error);
+    throw error;
+  }
+}

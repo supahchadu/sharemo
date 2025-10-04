@@ -2,6 +2,7 @@
 import ShareCard from "@/components/cards/ShareCard";
 import { fetchPosts } from "@/lib/actions/share.actions";
 import { currentUser } from "@clerk/nextjs/server";
+
 export default async function Home() {
 
   const result = await fetchPosts(1,30);
@@ -15,7 +16,8 @@ export default async function Home() {
           <p className="no-result">No shares found~</p>
         ): (
           <>
-            {result.posts.map((post)=>(
+            {result.posts.map((post,index:number)=>(
+              
               <ShareCard 
                 key={post._id}
                 id={post._id}

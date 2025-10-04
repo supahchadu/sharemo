@@ -65,7 +65,8 @@ export async function fetchPosts(pageNumer = 1, pageSize = 20){
         path: "cluster",
         model: Cluster,
     })
-    .populate({path: 'children',
+    .populate({
+      path: 'children',
         populate: {
             path: 'author',
             model: User,
@@ -77,7 +78,7 @@ export async function fetchPosts(pageNumer = 1, pageSize = 20){
         parentId: {$in : [null, undefined]}});
 
     const posts = await postsQuery.exec();
-
+    
     const isNext = totalPostsCount > skipAmount + posts.length;
 
     return {posts, isNext};
@@ -128,18 +129,19 @@ export async function fetchShareById(id: string){
 export async function addLikeToShare(
     shareId: string, 
     userId: string,
+    userInfo: string,
 ){
   connectToDB();
     try {
         //find the original share
         const post = await Share.findById(shareId);
 
-        const userLikedShare = post.likes.indexOf(userId);
+        const userLikedShare = post.likes.Find(userInfo);
 
         if(userLikedShare > -1){
           post.likes.splice(userLikedShare, 1);
         }else{
-          post.likes.push(userId);
+          post.likes.push(JSON.stringify(userInfo));
         }
 
         await post.save();

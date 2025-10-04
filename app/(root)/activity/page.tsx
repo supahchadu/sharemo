@@ -1,7 +1,7 @@
 
 
 
-import { fetchUser, getActivity } from "@/lib/actions/user.actions";
+import { fetchUser, getActivity, getActivityLikes } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,6 +16,7 @@ async function Page() {
     if(!userInfo?.onboarded) redirect('/onboarding');
 
     const activity = await getActivity(userInfo._id);
+    const activityLikes = await getActivityLikes(userInfo._id);
     
     return (
        <>
@@ -24,7 +25,7 @@ async function Page() {
       <section className='mt-10 flex flex-col gap-5'>
         {activity.length > 0 ? (
           <>
-            {activity.map((activity) => (
+            {activity.map((activity)  => (
               <Link key={activity._id} href={`/share/${activity.parentId}`}>
                 <article className='activity-card'>
                   <Image
@@ -45,7 +46,33 @@ async function Page() {
             ))}
           </>
         ) : (
-          <p className='!text-base-regular text-light-3'>No activity yet</p>
+          <p className='!text-base-regular text-light-3'>No Replies yet</p>
+        )}
+
+        {activityLikes.length > 0 ? (
+          <>
+            {activityLikes.map((activity)  => (
+              <Link key={activity._id} href={`/share/${activity.parentId}`}>
+                <article className='activity-card'>
+                  <Image
+                    src={activity.author.image}
+                    alt='user_logo'
+                    width={20}
+                    height={20}
+                    className='rounded-full object-cover'
+                  />
+                  <p className='!text-small-regular text-light-1'>
+                    <span className='mr-1 text-primary-500'>
+                      {activity.author.name}
+                    </span>{" "}
+                    has liked your share
+                  </p>
+                </article>
+              </Link>
+            ))}
+          </>
+        ) : (
+          <p className='!text-base-regular text-light-3'>No Likes yet</p>
         )}
       </section>
     </>

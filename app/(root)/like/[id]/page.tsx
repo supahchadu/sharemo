@@ -13,10 +13,11 @@ const Page = async ({ params } : {id: string} ) => {
     if(!user) return null;
 
     const share = await fetchShareById(id);
-    const userInfo = await fetchUser(user.id)
+    const userInfo = await fetchUser(user.id);
 
+    console.log(userInfo.id);
     const handleLikes = async () => {
-            await addLikeToShare(share._id, userInfo._id);
+            await addLikeToShare(share._id, userInfo._id, userInfo.id);
         }
     
     handleLikes();
