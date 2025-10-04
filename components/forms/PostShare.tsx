@@ -20,6 +20,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ShareValidation } from "@/lib/validations/share";
 import { createShare } from "@/lib/actions/share.actions";
 import { useOrganization } from "@clerk/nextjs";
+import { useState } from "react";
 
 interface Props {
     userId: string,
@@ -31,6 +32,8 @@ function PostShare({ userId } : Props)
     const pathname = usePathname();
     const { organization } = useOrganization();
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const form = useForm<z.infer<typeof ShareValidation>>({
         resolver: zodResolver(ShareValidation),
         defaultValues: {
@@ -41,6 +44,9 @@ function PostShare({ userId } : Props)
 
     const onSubmit = async (values : z.infer<typeof ShareValidation>) => {
 
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
         await createShare({
             text: values.share,
             author: userId,
@@ -71,7 +77,7 @@ function PostShare({ userId } : Props)
                 <FormMessage />
                 </FormItem>
             )}/>
-            <Button type="submit" className="bg-primary-500">Post mo Yern~</Button>
+            <Button type="submit" disabled={isSubmitting} className="bg-primary-500">Post mo Yern~</Button>
             </form>
         </Form>
     )

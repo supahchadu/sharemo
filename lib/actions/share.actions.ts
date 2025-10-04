@@ -136,7 +136,7 @@ export async function addLikeToShare(
         //find the original share
         const post = await Share.findById(shareId);
 
-        const userLikedShare = post.likes.Find(userInfo);
+        const userLikedShare = post.likes.indexOf(userInfo);
 
         if(userLikedShare > -1){
           post.likes.splice(userLikedShare, 1);

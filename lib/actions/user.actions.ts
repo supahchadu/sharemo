@@ -6,6 +6,7 @@ import { connectToDB } from "../mongoose"
 import cluster from "cluster";
 import Share from "../models/share.model";
 import { FilterQuery, SortOrder } from "mongoose";
+import Cluster from "../models/cluster.model";
 
 interface Params {
     userId: string,
@@ -53,11 +54,11 @@ export async function fetchUser(userId: string)
     try {
         connectToDB();
         return await User
-        .findOne({id:userId});
-        // .populate({
-        //     path: 'clusters',
-        //     model: Cluster,
-        // })
+        .findOne({id:userId})
+        .populate({
+             path: 'clusters',
+             model: Cluster,
+         });
 
     }catch(error)
     {

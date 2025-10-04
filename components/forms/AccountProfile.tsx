@@ -37,10 +37,15 @@ interface Props {
 }
 
 const AccountProfile = ({user, btnTitle}:Props) => {
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorOccured, setIsErrorOccured] = useState(false);
+
     const [files, setFiles] = useState<File[]>([]);
     const { startUpload } = useUploadThing("media");
     const router = useRouter();
     const pathname = usePathname();
+
 
     const form = useForm({
         resolver: zodResolver(UserValidation),
@@ -73,6 +78,12 @@ const AccountProfile = ({user, btnTitle}:Props) => {
     }
 
     const onSubmit = async(values: z.infer<typeof UserValidation>) => {
+
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+        setIsErrorOccured(false);
+
         const blob = values.profile_photo;
         const hasImageChange = isBase64Image(blob);
 
@@ -81,6 +92,9 @@ const AccountProfile = ({user, btnTitle}:Props) => {
 
             if(imgRes && imgRes[0].fileUrl){
                 values.profile_photo = imgRes[0].fileUrl;
+            }else{
+                setIsSubmitting(false);
+                setIsErrorOccured(true);
             }
         }
 
@@ -103,7 +117,12 @@ const AccountProfile = ({user, btnTitle}:Props) => {
 
     return (
     <Form {...form}>
+        { !errorOccured ? 
+        <p className="flex-1 text-small-semibold bg-yellow-300 rounded-sm text-gray-900 mb-5 text-center">Images must be small size 1MB below</p> 
+        : <p className="flex-1 text-small-semibold bg-red-500 rounded-sm text-gray-900 mb-5 text-center">Image exceed 1MB try again</p>
+        }
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col justify-start gap-10">
+            
             <FormField
             control={form.control}
             name="profile_photo"
@@ -112,6 +131,7 @@ const AccountProfile = ({user, btnTitle}:Props) => {
                 <FormLabel className="account-form_image-label">{field.value ? (
                     <Image src={field.value} alt="profile photo" width={96} height={96} priority className="rounded-full object-contain" />
                 ):(<Image src="/profile.svg" alt="profile photo" width={24} height={24} className="object-contain" />)}
+                
                 </FormLabel>
 
                 <FormControl className="flex-1 text-base-semibold text-gray-200">
@@ -175,7 +195,8 @@ const AccountProfile = ({user, btnTitle}:Props) => {
                 <FormMessage />
                 </FormItem>
             )}/>
-        <Button type="submit" className="bg-primary-500">Gora Bells~</Button>
+        <Button type="submit" disabled={isSubmitting} className="bg-primary-500">
+            {isSubmitting ? <p>Processing...</p>: <p>Gora Bells~</p>}</Button>
       </form>
     </Form>
     )

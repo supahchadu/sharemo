@@ -12,12 +12,12 @@ export const sidebarLinks = [
   {
     imgURL: "/heart.svg",
     route: "/activity",
-    label: "Favorites",
+    label: "Activity",
   },
   {
     imgURL: "/create.svg",
     route: "/create-share",
-    label: "My Shares",
+    label: "Share ko",
   },
   {
     imgURL: "/community.svg",
@@ -34,7 +34,6 @@ export const sidebarLinks = [
 export const profileTabs = [
   { value: "shares", label: "Shares", icon: "/reply.svg" },
   { value: "replies", label: "Replies", icon: "/members.svg" },
-  { value: "tagged", label: "Tagged", icon: "/tag.svg" },
 ];
 
 export const clusterTabs = [

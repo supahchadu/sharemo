@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 function LeftSidebar(){
     const pathname = usePathname();
-    const { user } = useUser();
+    const  user  = useAuth();
 
     return (
         <section className="custom-scrollbar leftsidebar">
@@ -19,8 +19,8 @@ function LeftSidebar(){
                     (pathname.includes(link.route) && link.route.length > 1) ||
                         pathname === link.route;
                         //console.log(user);
-                       if (link.route === '/profile') 
-                            link.route = `${link.route}/${user?.id}`;
+                        if (link.route === '/profile') 
+                             link.route = `${link.route}/${user?.userId}`;
 
                     return(
                     <Link href={link.route} key={link.label} className={`leftsidebar_link ${isActive && "bg-primary-500"}`}>

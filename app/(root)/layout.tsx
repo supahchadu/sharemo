@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-     <ClerkProvider>
+     <ClerkProvider dynamic>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
           <Topbar />
@@ -43,7 +43,7 @@ export default function RootLayout({
 
               </div>
             </section>
-            <RightSidebar />
+            {/* <RightSidebar /> */}
           </main>
           <Bottombar />
         </body>

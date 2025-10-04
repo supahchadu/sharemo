@@ -33,7 +33,7 @@ const ShareTab = async ({currentUserId, accountId, accountType}:Props) => {
                     currentUserId={currentUserId}
                     parentId={childItem.parentId}
                     content={childItem.text}
-                    author={accountType==='User' 
+                    author={accountType==="User"
                         ? {name: result.name, image: result.image, id: result.id}
                         : {name: childItem.author.name, image: childItem.author.image, id: childItem.author.id}
                     }
@@ -41,7 +41,6 @@ const ShareTab = async ({currentUserId, accountId, accountType}:Props) => {
                     createdAt={childItem.createdAt}
                     likes={childItem.likes}
                     comments={childItem.children}
-                    isComment
                 />
             ))}
         </section>

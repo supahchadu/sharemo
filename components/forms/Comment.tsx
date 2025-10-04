@@ -21,6 +21,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { CommentValidation, ShareValidation } from "@/lib/validations/share";
 import { addCommentToShare, createShare } from "@/lib/actions/share.actions";
 import Image from "next/image";
+import { useState } from "react";
 
 interface Props {
     shareId: string;
@@ -32,6 +33,8 @@ const Comment = ( {shareId, currentUserImg, currentUserId }: Props) => {
     
     const pathname = usePathname();
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const form = useForm<z.infer<typeof CommentValidation>>({
         resolver: zodResolver(CommentValidation),
         defaultValues: {
@@ -40,6 +43,11 @@ const Comment = ( {shareId, currentUserImg, currentUserId }: Props) => {
     });
 
     const onSubmit = async (values : z.infer<typeof CommentValidation>) => {
+
+        if (isSubmitting) return; // Prevent multiple submissions
+
+        setIsSubmitting(true);
+
         await addCommentToShare(shareId, values.share,
             JSON.parse(currentUserId), pathname);
   
@@ -75,7 +83,7 @@ const Comment = ( {shareId, currentUserImg, currentUserId }: Props) => {
           )}
         />
 
-        <Button type='submit' className='comment-form_btn'>
+        <Button type='submit' disabled={isSubmitting} className='comment-form_btn'>
           Reply
         </Button>
       </form>

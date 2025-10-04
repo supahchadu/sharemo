@@ -1,12 +1,14 @@
 
-import PostShare from "@/components/forms/PostShare";
+
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import ShareTab from "@/components/shared/ShareTab";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { profileTabs } from "@/constants";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 async function Page({params } : {params : {id:string}}) {
@@ -21,7 +23,8 @@ async function Page({params } : {params : {id:string}}) {
         redirect('/onboarding');
     
     return (
-        <section>
+        <section className="flex-col">
+            
             <ProfileHeader 
                 accountId ={userInfo.id}
                 authUserId={user.id}
@@ -30,7 +33,13 @@ async function Page({params } : {params : {id:string}}) {
                 imgUrl={userInfo.image}
                 bio={userInfo.bio}
             />
-
+            <div className="mt-5 content-center">
+            <Link href="/edit-profile">
+                <Button className="">
+                    Edit Profile
+                </Button>
+            </Link>
+            </div>
             <div className="mt-9">
                 <Tabs defaultValue="shares" className="w-full">
                     <TabsList className="tab">
@@ -52,8 +61,8 @@ async function Page({params } : {params : {id:string}}) {
                             </TabsTrigger>
                         ))}
                     </TabsList>
-                    {profileTabs.map((tab)=>(
-                        <TabsContent key={`content-${tab.label}`} value={tab.value}
+
+                        <TabsContent key={`shares`} value="shares"
                         className="w-full text-light-1">
                             <ShareTab 
                                 currentUserId={user.id}
@@ -61,7 +70,11 @@ async function Page({params } : {params : {id:string}}) {
                                 accountType="User"
                             />
                         </TabsContent>
-                    )) }
+
+                        <TabsContent key={`replies`} value="replies"
+                        className="w-full text-light-1">
+                            <p className="flex mt-9 text-ellipsis text-justify">I am working on it hehe~ </p>
+                        </TabsContent>
                 </Tabs>
             </div>
         </section>
